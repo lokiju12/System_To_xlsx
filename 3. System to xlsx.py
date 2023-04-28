@@ -1,4 +1,5 @@
 '''
+2023-04-28
 1. 모니터가 1대면 오류가 발생하나 정보 추출은 정상적임
 2. 모니터 정보는 2대까지만 저장
 3. 저장한 자료는 upload_path에 저장됨 [권한필요]
@@ -6,7 +7,7 @@
 '''
 
 import pandas as pd
-import subprocess, os, socket
+import subprocess, socket
 # 파이썬 오류 무시하기
 import warnings
 warnings.filterwarnings('ignore', category=DeprecationWarning)
@@ -32,7 +33,8 @@ domain = domain[7:] # 앞자리 제거
 id = subprocess.run('whoami', stdout=subprocess.PIPE)
 id = id.stdout.decode('utf-8')
 id = id.replace('\r', '') # \r 불필요 항목 제거
-id = id[id.find('\\')+1:].replace('\n','')
+id = id[id.find('\\')+1:].replace('\n','').upper()
+print(id)
 # IP 정보
 ip = (socket.gethostbyname(socket.gethostname()))
 # 데스크탑 정보
@@ -60,10 +62,12 @@ info = [[hostname,
 df = pd.DataFrame(info, columns = name)
 print(df)
 # ======================================================
-# 저장경로
-
-directory = os.path.join(os.environ['USERPROFILE'], 'Desktop') # 바탕화면
-save_path = directory+'\\'+id+'.xlsx'
+# directory = os.path.join(os.environ['USERPROFILE'], 'Desktop') # 바탕화면
+directory = r'c:\domain'
+print(directory)
+# 파일 이름 FAS_IP_ID
+save_path = directory+'\\'+ip+' ('+id+').xlsx'
+print(save_path)
 # DataFrame을 저장
 df.to_excel(save_path)
 # ======================================================
